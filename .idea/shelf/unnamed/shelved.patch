@@ -1,0 +1,1206 @@
+Index: struct/struct.iml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- struct/struct.iml	(revision )
++++ struct/struct.iml	(revision )
+@@ -0,0 +1,11 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<module type="JAVA_MODULE" version="4">
++  <component name="NewModuleRootManager" inherit-compiler-output="true">
++    <exclude-output />
++    <content url="file://$MODULE_DIR$">
++      <sourceFolder url="file://$MODULE_DIR$/src" isTestSource="false" />
++    </content>
++    <orderEntry type="jdk" jdkName="9.0" jdkType="JavaSDK" />
++    <orderEntry type="sourceFolder" forTests="false" />
++  </component>
++</module>
+\ No newline at end of file
+Index: struct/src/cn/scl/arr/ArraySort.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- struct/src/cn/scl/arr/ArraySort.java	(revision )
++++ struct/src/cn/scl/arr/ArraySort.java	(revision )
+@@ -0,0 +1,179 @@
++package cn.scl.arr;
++
++import java.util.Arrays;
++
++public class ArraySort {
++    public static void main(String[] args) {
++        int[] arr = {34, 54, 2, 5, 5, 6, 3, 78, 35, 8, 10, 17};
++        int[] arr1 = {34, 54, 2, 5, 5, 6, 3, 78, 35, 8, 10, 17};
++        bubbleSort(arr);
++        System.out.println(Arrays.toString(arr));
++        System.out.println("-------------------------------");
++        bubbleSort01(arr1);
++        System.out.println(Arrays.toString(arr1));
++
++    }
++
++    /**
++     * 冒泡排序
++     */
++    public static void bubbleSort(int[] arr) {
++        int count = 0;
++        for (int i = 0; i < arr.length - 1; i++) {
++            for (int j = 0; j < arr.length - 1 - i; j++) {
++                if (arr[j] > arr[j + 1]) {
++                    int tmp = arr[j];
++                    arr[j] = arr[j + 1];
++                    arr[j + 1] = tmp;
++                }
++                count++;
++            }
++        }
++        System.out.println("count:" + count);
++    }
++
++    /**
++     * 改进冒泡
++     * @param arr
++     */
++    public static void bubbleSort01(int[] arr) {
++        int count = 0;
++        for (int i = 0; i < arr.length - 1; i++) {
++            boolean flag = true;
++            for (int j = 0; j < arr.length - 1 - i; j++) {
++                if (arr[j] > arr[j + 1]) {
++                    int tmp = arr[j];
++                    arr[j] = arr[j + 1];
++                    arr[j + 1] = tmp;
++                    flag = false;
++                }
++                count++;
++            }
++            if (flag){
++                break;
++            }
++        }
++        System.out.println("count:" + count);
++    }
++
++    /**
++     * 快排
++     */
++
++    public static void test01(int[] arr, int start, int end) {
++        while (start < end) {
++            int stard = arr[start];
++            int low = stard;
++            int high = end;
++            while (low < high) {
++                while (low < high && stard < arr[high]) {
++                    high--;
++                }
++                arr[low] = arr[high];
++                while (low < high && arr[low] < stard) {
++                    low++;
++                }
++                arr[high] = arr[low];
++            }
++            arr[low] = stard;
++            test01(arr, 0, low);
++            test01(arr, low + 1, end);
++        }
++    }
++
++    /**
++     * 直接插入排序
++     */
++    public static void teset02(int[] arr) {
++        for (int i = 1; i < arr.length; i++) {
++            if (arr[i - 1] < arr[i]) {
++                int tmp = arr[i];
++                int j;
++                for (j = i - 1; j >= 0 && tmp > arr[j]; j--) {
++                    arr[j + 1] = arr[j];
++                }
++                arr[j + 1] = tmp;
++            }
++        }
++    }
++
++    /**
++     * 希尔排序
++     */
++    public static void test03(int[] arr) {
++        for (int d = arr.length / 2; d > 0; d /= 2) {
++            for (int i = d; i < arr.length; i++) {
++                for (int j = i - d; j >= 0; j -= d) {
++                    if (arr[j] > arr[j + d]) {
++                        int tmp = arr[j + d];
++                        arr[j + d] = arr[j];
++                        arr[j] = tmp;
++                    }
++
++                }
++            }
++        }
++    }
++
++    /**
++     * 简单选择排序
++     */
++    public static void test04(int[] arr) {
++        for (int i = 0; i < arr.length; i++) {
++            int mindex = i;
++            for (int j = i + 1; j < arr.length; j++) {
++                if (arr[mindex] > arr[j]) {
++                    mindex = j;
++                }
++            }
++            if (mindex != i) {
++                int tmp = arr[i];
++                arr[i] = arr[mindex];
++                arr[mindex] = tmp;
++            }
++        }
++    }
++
++    /**
++     * 归并排序
++     */
++    public static void test05(int[] arr, int low, int middle, int high) {
++        int[] tmp = new int[high - low + 1];
++        int index = 0;
++        int oneArr = low;
++        int twoArr = middle + 1;
++        while (oneArr < middle && twoArr < high) {
++            if (arr[oneArr] > arr[twoArr]) {
++                tmp[index] = arr[oneArr];
++                oneArr++;
++            } else {
++                tmp[index] = arr[twoArr];
++                twoArr++;
++            }
++            index++;
++        }
++        while (oneArr <= middle) {
++            tmp[index] = arr[oneArr];
++            oneArr++;
++            index++;
++        }
++        while (twoArr <= high) {
++            tmp[index] = arr[twoArr];
++            index++;
++            twoArr++;
++        }
++        for (int k = 0; k < tmp.length; k++) {
++            arr[k + low] = tmp[k];
++        }
++    }
++
++    public static void test06(int[] arr, int low, int high) {
++        int mid = (high - low) / 2;
++        if (low < high) {
++            test06(arr, low, mid);
++            test06(arr, mid + 1, high);
++            test05(arr, low, mid, high);
++        }
++    }
++
++}
+Index: struct/src/cn/scl/tree1/BinaryTree.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- struct/src/cn/scl/tree1/BinaryTree.java	(revision )
++++ struct/src/cn/scl/tree1/BinaryTree.java	(revision )
+@@ -0,0 +1,99 @@
++package cn.scl.tree1;
++
++/**
++ * 二叉树
++ */
++public class BinaryTree {
++    TreeNode root ;
++    TreeNode pre = null;
++
++    public TreeNode getRoot() {
++        return root;
++    }
++
++    public void setRoot(TreeNode root) {
++
++        this.root = root;
++    }
++
++    public void frontShow() {
++        root.frontShow();
++    }
++
++    public void midShow() {
++        root.midShow();
++    }
++
++    public void afterShow() {
++        root.afterShow();
++    }
++
++    public TreeNode frontSerch(int value) {
++        return root.frontSerch(value);
++    }
++
++    public TreeNode midSerch(int value) {
++        return root.midSerch(value);
++    }
++
++    public TreeNode afterSerch(int value) {
++        return root.afterSerch(value);
++    }
++
++    public void delete(int value) {
++        if (root.value == value) {
++            root = null;
++            return;
++        }
++        root.delete(value);
++    }
++
++    /**
++     * 中序线索化二叉树
++     */
++    public void threadNodes() {
++        threadNodes(root);
++    }
++
++    public void threadNodes(TreeNode node) {
++        if (node == null) {
++            return;
++        }
++        //左
++        threadNodes(node.left);
++        //自己
++        if (node.left == null) {
++
++            node.left = pre;
++            node.leftType = 1;
++        }
++        if (pre != null && pre.right == null) {
++            pre.right = node;
++            pre.rightType = 1;
++        }
++        //保存当前节点
++        pre = node;
++        //右
++        threadNodes(node.right);
++
++    }
++
++    /**
++     * 遍历
++     */
++    public void thradIterator() {
++        //存放当前节点
++        TreeNode node = root;
++        while (node != null) {
++            while (node.leftType == 0) {
++                node = node.left;
++            }
++            System.out.println(node.value);
++            while (node.rightType == 1) {
++                node = node.right;
++                System.out.println(node.value);
++            }
++            node = node.right;
++        }
++    }
++}
+Index: struct/src/cn/scl/tree1/TreeNode.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- struct/src/cn/scl/tree1/TreeNode.java	(revision )
++++ struct/src/cn/scl/tree1/TreeNode.java	(revision )
+@@ -0,0 +1,132 @@
++package cn.scl.tree1;
++
++/**
++ * 树节点
++ */
++public class TreeNode {
++    int value;
++    TreeNode left;
++    TreeNode right;
++    int leftType;
++    int rightType;
++
++    public TreeNode(int value) {
++        this.value = value;
++    }
++
++    public void setLeft(TreeNode left) {
++        this.left = left;
++    }
++
++    public void setRight(TreeNode right) {
++        this.right = right;
++    }
++
++
++    public void frontShow() {
++        System.out.println(value);
++        if (left != null) {
++            left.frontShow();
++        }
++        if (right != null) {
++            right.frontShow();
++        }
++    }
++
++    public void midShow() {
++        if (left != null) {
++            left.midShow();
++        }
++        System.out.println(value);
++        if (right != null) {
++            right.midShow();
++        }
++
++    }
++
++    public void afterShow() {
++        if (left != null) {
++            left.afterShow();
++        }
++        if (right != null) {
++            right.afterShow();
++        }
++        System.out.println(value);
++    }
++
++    public TreeNode frontSerch(int value) {
++        TreeNode target = null;
++        if (this.value == value) {
++            return this;
++        } else {
++            if (left != null) {
++                target = left.frontSerch(value);
++            }
++            if (target != null) {
++                return target;
++            }
++            if (right != null) {
++                target = right.frontSerch(value);
++            }
++        }
++        return target;
++    }
++
++
++    public TreeNode midSerch(int value) {
++        TreeNode target = null;
++        if (left != null) {
++            target = left.midSerch(value);
++            if (target != null) {
++                return target;
++            }
++        }
++        if (this.value == value) {
++            return this;
++        }
++        if (right != null) {
++            target = right.midSerch(value);
++        }
++        return target;
++    }
++
++    public TreeNode afterSerch(int value) {
++        TreeNode target = null;
++        if (left != null) {
++            target = left.afterSerch(value);
++            if (target != null) {
++                return target;
++            }
++        }
++        if (right != null) {
++            target = right.afterSerch(value);
++            if (target != null) {
++                return target;
++            }
++        }
++        if (this.value == value) {
++            target = this;
++        }
++        return target;
++    }
++
++    public void delete(int value) {
++        TreeNode parent = this;
++        if (parent.left.value == value){
++            parent.left = null;
++            return;
++        }
++        if (parent.right.value == value){
++            parent.right = null;
++            return;
++        }
++        parent = left;
++        if(parent != null){
++            parent.delete(value);
++        }
++        parent = right;
++        if(parent != null){
++            parent.delete(value);
++        }
++    }
++}
+Index: struct/src/cn/scl/demo01/BinaryTree.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- struct/src/cn/scl/demo01/BinaryTree.java	(revision )
++++ struct/src/cn/scl/demo01/BinaryTree.java	(revision )
+@@ -0,0 +1,222 @@
++package cn.scl.demo01;
++
++
++import java.util.*;
++
++public class BinaryTree {
++    public static void main(String[] args) {
++//        int[] arr = {3,5,7,8,11,14,23,29};
++//        Node huffmanTree = createHuffmanTree(arr);
++//        System.out.println(huffmanTree);
++//        System.out.println(huffmanTree.getLeft());
++//        System.out.println(huffmanTree.getRight().getRight());
++        String str = "aaabbccsdafrger";
++        byte[] bytes = huffmanZip(str.getBytes());
++
++        //解码
++        byte[] newBytes = decode(bytes, huffCodes);
++        System.out.println(Arrays.toString(newBytes));
++        System.out.println(new String(newBytes
++        ));
++    }
++
++    private static byte[] decode(byte[] bytes, Map<Byte, String> huffCodes) {
++        StringBuilder sb = new StringBuilder();
++        List<Byte> byteList = new ArrayList<>();
++        //byte数组转为二进制
++        for (int i = 0; i < bytes.length; i++) {
++            byte b = bytes[i];
++            boolean flag = (i == bytes.length - 1);
++            sb.append(byteToStr(!flag, b));
++        }
++        Map<String, Byte> map = new HashMap<>();
++        for (Map.Entry<Byte, String> entry : huffCodes.entrySet()) {
++            map.put(entry.getValue(), entry.getKey());
++        }
++        for (int i = 0; i < sb.length(); ) {
++            int count = 1;
++            boolean flag = true;
++            while (flag) {
++                String key = sb.substring(i, i + count);
++                Byte b = map.get(key);
++                if (b == null) {
++                    count++;
++                } else {
++                    byteList.add(b);
++                    flag = false;
++                }
++            }
++            i += count;
++        }
++        byte[] bytes1 = new byte[byteList.size()];
++        int index = 0;
++        for (Byte aByte : byteList) {
++            bytes1[index++]=aByte;
++        }
++        return bytes1;
++    }
++
++    private static String byteToStr(boolean flag, byte a) {
++        int temp = a;
++        if (flag) {
++            temp |= 256;
++        }
++        String str = Integer.toBinaryString(temp);
++        if (flag) {
++
++            return str.substring(str.length() - 8);
++        } else {
++            return str;
++        }
++
++    }
++    /**
++     * 压缩
++     *
++     * @param bytes
++     * @return
++     */
++    public static byte[] huffmanZip(byte[] bytes) {
++        //统计次数
++        List<Node> nodes = getNodes(bytes);
++        //创建赫夫曼树
++        Node tree = createHuffmanTree(nodes);
++        //创建赫夫曼编码表
++        Map<Byte, String> codes = getCodes(tree);
++        //编码
++        byte[] b = zip(bytes, codes);
++        return b;
++    }
++
++    /**
++     * 进行编码
++     *
++     * @param bytes
++     * @param codes
++     * @return
++     */
++    private static byte[] zip(byte[] bytes, Map<Byte, String> codes) {
++        StringBuilder st = new StringBuilder();
++        for (byte b : bytes) {
++            st.append(codes.get(b));
++        }
++        System.out.println(st.toString());
++        int len = st.length() % 8 == 0 ? st.length() / 8 : st.length() / 8 + 1;
++        byte[] by = new byte[len];
++        //记录下标
++        int index = 0;
++        for (int i = 0; i < st.length(); i += 8) {
++            String str;
++            if ((i + 8) > st.length()) {
++                str = st.substring(i);
++            } else {
++                str = st.substring(i, i + 8);
++            }
++            //转换为字节
++            byte byt = (byte) Integer.parseInt(str, 2);
++            by[index++] = byt;
++        }
++        System.out.println("-----------qw------------");
++        System.out.println("-----------qw------------");
++        return by;
++    }
++
++    private static StringBuilder sb = new StringBuilder();
++    private static Map<Byte, String> huffCodes = new HashMap<>();
++
++    private static Map<Byte, String> getCodes(Node tree) {
++        if (null == tree) {
++            return null;
++        }
++        getCodes(tree.getLeft(), "0", sb);
++        getCodes(tree.getRight(), "1", sb);
++        return huffCodes;
++    }
++
++    private static void getCodes(Node node, String code, StringBuilder sb) {
++        StringBuilder sb2 = new StringBuilder(sb);
++        sb2.append(code);
++        if (node.getLeft() != null) {
++            getCodes(node.getLeft(), "0", sb2);
++            getCodes(node.getRight(), "1", sb2);
++        } else {
++            String str = sb2.toString();
++            huffCodes.put(node.getData(), str);
++        }
++    }
++
++
++    /**
++     * 创建赫夫曼树
++     *
++     * @param list
++     * @return
++     */
++    private static Node createHuffmanTree(List<Node> list) {
++        //循环执行，直到只剩下一个node为止
++        while (list.size() > 1) {
++            //排序
++            Collections.sort(list);
++            //获取集合中两个出现次数少的的node
++            Node left = list.get(0);
++            Node right = list.get(1);
++            //把两个node的次数赋值给新的node
++            Node newNode = new Node(null, left.getWeight() + right.getWeight());
++            //设置新node的左右节点
++            newNode.setLeft(left);
++            newNode.setRight(right);
++            //把新的节点添加进集合
++            list.add(newNode);
++            //移除两个小的节点
++            list.remove(right);
++            list.remove(left);
++        }
++        //System.out.println(list);
++        return list.get(0);
++    }
++
++    private static List<Node> getNodes(byte[] bytes) {
++        List<Node> nodes = new ArrayList<>();
++        Map<Byte, Integer> counts = new HashMap<>();
++        //把字符和字符出现次数存入map集合中
++        for (byte b : bytes) {
++            Integer count = counts.get(b);
++            if (count == null) {
++                counts.put(b, 1);
++            } else {
++                counts.put(b, count + 1);
++            }
++        }
++        for (Map.Entry<Byte, Integer> entry : counts.entrySet()) {
++            nodes.add(new Node(entry.getKey(), entry.getValue()));
++        }
++        //   System.out.println(nodes);
++        return nodes;
++    }
++
++    /**
++     * 赫夫曼树
++     */
++    public static Node createHuffmanTree(int[] arr) {
++        List<Node> list = new ArrayList<>();
++        for (int value : arr) {
++            list.add(new Node(value));
++        }
++        while (list.size() > 1) {
++            Collections.sort(list);
++            Node left = list.get(0);
++            Node right = list.get(1);
++            Node newNode = new Node(left.getWeight() + right.getWeight());
++            newNode.setLeft(left);
++            newNode.setRight(right);
++            list.add(newNode);
++            list.remove(left);
++            list.remove(right);
++        }
++        return list.get(0);
++    }
++
++    /**
++     * 1、获得字符的次数
++     */
++}
+Index: struct/src/cn/scl/demo02/MaxSumRec.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- struct/src/cn/scl/demo02/MaxSumRec.java	(revision )
++++ struct/src/cn/scl/demo02/MaxSumRec.java	(revision )
+@@ -0,0 +1,20 @@
++package cn.scl.demo02;
++
++public class MaxSumRec {
++    private static int maxSum(int[] arr, int left, int right) {
++        //终止条件
++        if (left == right) {
++            if (arr[left] > 0) {
++                return arr[left];
++            }
++            return 0;
++        }
++        int center = (left + right) >> 2;
++        //最大序列在左部
++        int maxLeftSum = maxSum(arr,left,center);
++        //最大序列在右部
++        int maxRightSum = maxSum(arr,center+1,right);
++
++        return 0;
++    }
++}
+Index: struct/src/cn/scl/demo01/Node.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- struct/src/cn/scl/demo01/Node.java	(revision )
++++ struct/src/cn/scl/demo01/Node.java	(revision )
+@@ -0,0 +1,66 @@
++package cn.scl.demo01;
++
++public class Node implements Comparable<Node> {
++    private Byte data;
++
++    public Byte getData() {
++        return data;
++    }
++
++    public void setData(Byte data) {
++        this.data = data;
++    }
++
++    //权值
++    private int weight;
++    //左节点
++    private Node left;
++    //右节点
++    private Node right;
++
++    public Node(Byte data, int weight) {
++        this.data = data;
++        this.weight = weight;
++    }
++
++    @Override
++    public String toString() {
++        return "Node{" +
++                "data=" + data +
++                ", weight=" + weight +
++                '}';
++    }
++
++    public Node(int weight) {
++        this.weight = weight;
++    }
++
++    public int getWeight() {
++        return weight;
++    }
++
++    public void setWeight(int weight) {
++        this.weight = weight;
++    }
++
++    public Node getLeft() {
++        return left;
++    }
++
++    public void setLeft(Node left) {
++        this.left = left;
++    }
++
++    public Node getRight() {
++        return right;
++    }
++
++    public void setRight(Node right) {
++        this.right = right;
++    }
++
++    @Override
++    public int compareTo(Node o) {
++        return this.getWeight()-o.getWeight();
++    }
++}
+Index: struct/src/cn/scl/tree1/TestArrayBinaryTree.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- struct/src/cn/scl/tree1/TestArrayBinaryTree.java	(revision )
++++ struct/src/cn/scl/tree1/TestArrayBinaryTree.java	(revision )
+@@ -0,0 +1,22 @@
++package cn.scl.tree1;
++
++public class TestArrayBinaryTree {
++    public static void main(String[] args) {
++        int[] arr = new int[]{1, 2, 3, 4, 5, 6, 7};
++        BinaryTree binaryTree = new BinaryTree();
++        TreeNode root = new TreeNode(1);
++        binaryTree.setRoot(root);
++        TreeNode rootL = new TreeNode(2);
++        TreeNode rootR = new TreeNode(3);
++        root.setLeft(rootL);
++        root.setRight(rootR);
++        rootL.setLeft(new TreeNode(4));
++        rootL.setRight(new TreeNode(5));
++        rootR.setLeft(new TreeNode(6));
++        rootR.setRight(new TreeNode(7));
++        binaryTree.midShow();
++        System.out.println("-------------------------");
++        binaryTree.threadNodes();
++        binaryTree.thradIterator();
++    }
++}
+Index: struct/src/cn/scl/tree/BinaryTree.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- struct/src/cn/scl/tree/BinaryTree.java	(revision )
++++ struct/src/cn/scl/tree/BinaryTree.java	(revision )
+@@ -0,0 +1,49 @@
++package cn.scl.tree;
++
++/**
++ * 二叉树
++ */
++public class BinaryTree {
++    TreeNode root;
++
++    public TreeNode getRoot() {
++        return root;
++    }
++
++    public void setRoot(TreeNode root) {
++
++        this.root = root;
++    }
++
++    public void frontShow() {
++        root.frontShow();
++    }
++
++    public void midShow() {
++        root.midShow();
++    }
++
++    public void afterShow() {
++        root.afterShow();
++    }
++
++    public TreeNode frontSerch(int value) {
++        return root.frontSerch(value);
++    }
++
++    public TreeNode midSerch(int value) {
++        return root.midSerch(value);
++    }
++
++    public TreeNode afterSerch(int value) {
++        return root.afterSerch(value);
++    }
++
++    public void delete(int value) {
++        if (root.value == value) {
++            root = null;
++            return;
++        }
++        root.delete(value);
++    }
++}
+Index: .idea/vcs.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/vcs.xml	(revision )
++++ .idea/vcs.xml	(revision )
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="VcsDirectoryMappings">
++    <mapping directory="$PROJECT_DIR$" vcs="Git" />
++  </component>
++</project>
+\ No newline at end of file
+Index: struct/src/cn/scl/list/ArrayListTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- struct/src/cn/scl/list/ArrayListTest.java	(revision )
++++ struct/src/cn/scl/list/ArrayListTest.java	(revision )
+@@ -0,0 +1,16 @@
++package cn.scl.list;
++
++import java.util.ArrayList;
++import java.util.List;
++
++public class ArrayListTest {
++    public static void main(String[] args) {
++        List<String> list = new ArrayList<>(2);
++        list.add("a");
++        list.add("b");
++        list.add("c");
++        list.add("d");
++        list.add("e");
++        System.out.println(list);
++    }
++}
+Index: struct/src/cn/scl/tree/TestArrayBinaryTree.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- struct/src/cn/scl/tree/TestArrayBinaryTree.java	(revision )
++++ struct/src/cn/scl/tree/TestArrayBinaryTree.java	(revision )
+@@ -0,0 +1,12 @@
++package cn.scl.tree;
++
++import java.util.Arrays;
++
++public class TestArrayBinaryTree {
++    public static void main(String[] args) {
++        int[] arr = new int[]{1, 2, 3, 4, 5, 6, 7};
++        ArrayBinaryTree binaryTree = new ArrayBinaryTree(arr);
++        binaryTree.heapSort(arr);
++        System.out.println(Arrays.toString(arr));
++}
++}
+Index: struct/src/cn/scl/tree/TreeNode.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- struct/src/cn/scl/tree/TreeNode.java	(revision )
++++ struct/src/cn/scl/tree/TreeNode.java	(revision )
+@@ -0,0 +1,130 @@
++package cn.scl.tree;
++
++/**
++ * 树节点
++ */
++public class TreeNode {
++    int value;
++    TreeNode left;
++    TreeNode right;
++
++    public TreeNode(int value) {
++        this.value = value;
++    }
++
++    public void setLeft(TreeNode left) {
++        this.left = left;
++    }
++
++    public void setRight(TreeNode right) {
++        this.right = right;
++    }
++
++
++    public void frontShow() {
++        System.out.println(value);
++        if (left != null) {
++            left.frontShow();
++        }
++        if (right != null) {
++            right.frontShow();
++        }
++    }
++
++    public void midShow() {
++        if (left != null) {
++            left.midShow();
++        }
++        System.out.println(value);
++        if (right != null) {
++            right.midShow();
++        }
++
++    }
++
++    public void afterShow() {
++        if (left != null) {
++            left.afterShow();
++        }
++        if (right != null) {
++            right.afterShow();
++        }
++        System.out.println(value);
++    }
++
++    public TreeNode frontSerch(int value) {
++        TreeNode target = null;
++        if (this.value == value) {
++            return this;
++        } else {
++            if (left != null) {
++                target = left.frontSerch(value);
++            }
++            if (target != null) {
++                return target;
++            }
++            if (right != null) {
++                target = right.frontSerch(value);
++            }
++        }
++        return target;
++    }
++
++
++    public TreeNode midSerch(int value) {
++        TreeNode target = null;
++        if (left != null) {
++            target = left.midSerch(value);
++            if (target != null) {
++                return target;
++            }
++        }
++        if (this.value == value) {
++            return this;
++        }
++        if (right != null) {
++            target = right.midSerch(value);
++        }
++        return target;
++    }
++
++    public TreeNode afterSerch(int value) {
++        TreeNode target = null;
++        if (left != null) {
++            target = left.afterSerch(value);
++            if (target != null) {
++                return target;
++            }
++        }
++        if (right != null) {
++            target = right.afterSerch(value);
++            if (target != null) {
++                return target;
++            }
++        }
++        if (this.value == value) {
++            target = this;
++        }
++        return target;
++    }
++
++    public void delete(int value) {
++        TreeNode parent = this;
++        if (parent.left.value == value){
++            parent.left = null;
++            return;
++        }
++        if (parent.right.value == value){
++            parent.right = null;
++            return;
++        }
++        parent = left;
++        if(parent != null){
++            parent.delete(value);
++        }
++        parent = right;
++        if(parent != null){
++            parent.delete(value);
++        }
++    }
++}
+Index: struct/src/cn/scl/demo02/MaxTest.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- struct/src/cn/scl/demo02/MaxTest.java	(revision )
++++ struct/src/cn/scl/demo02/MaxTest.java	(revision )
+@@ -0,0 +1,23 @@
++package cn.scl.demo02;
++
++public class MaxTest {
++    public static void main(String[] args) {
++        int[] arr = {4, -3, 5, -2, -1, 2, 6, -2};
++        System.out.println(max(arr));
++    }
++
++    public static int max(int[] arr) {
++        int maxValue = 0;
++        int currentValue = 0;
++        for (int i = 0; i < arr.length; i++) {
++            currentValue += arr[i];
++            if (currentValue > maxValue) {
++                maxValue = currentValue;
++            }
++            if (currentValue < 0)
++
++                currentValue = 0;
++        }
++        return maxValue;
++    }
++}
+Index: struct/src/cn/scl/tree/ArrayBinaryTree.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- struct/src/cn/scl/tree/ArrayBinaryTree.java	(revision )
++++ struct/src/cn/scl/tree/ArrayBinaryTree.java	(revision )
+@@ -0,0 +1,70 @@
++package cn.scl.tree;
++
++public class ArrayBinaryTree {
++    private int[] data;
++
++    public ArrayBinaryTree(int[] data) {
++        this.data = data;
++    }
++
++    public void frontShow(int start) {
++        if (data == null || data.length == 0) {
++            return;
++        }
++        System.out.println(data[start]);
++        if (2 * start + 1 < data.length) {
++            frontShow(2 * start + 1);
++        }
++        if (2 * start + 2 < data.length) {
++            frontShow(2 * start + 2);
++        }
++    }
++
++    /**
++     * 堆排序
++     * 从后往前，处理非叶子节点
++     */
++    public void heapSort(int[] data) {
++        int start = (data.length - 1) >> 1;
++        for (int i = start; i >= 0; i--) {
++            maxHeap(data, data.length, i);
++        }
++        for (int i = data.length - 1; i >= 0; --i) {
++            int tmp = data[0];
++            data[0] = data[i];
++            data[i] = tmp;
++            maxHeap(data, i, 0);
++        }
++
++    }
++
++    /**
++     * @param arr   数组
++     * @param size  数组长度
++     * @param index 数组下标
++     */
++    private void maxHeap(int[] arr, int size, int index) {
++        int left = 2 * index + 1;
++        int right = 2 * index + 2;
++        int max = index;
++//        if (left < size && arr[left] > arr[max]) {
++//            max = left;
++//        }
++//        if (right < size && arr[right] > arr[max]) {
++//            max = right;
++//        }
++        if(left < size){
++            max = arr[left] > arr[max] ? left:max;
++        }
++        if(right < size){
++            max = arr[right] > arr[max] ? right:max;
++        }
++        if (max != index) {
++            int tmp = arr[index];
++            arr[index] = arr[max];
++            arr[max] = tmp;
++            maxHeap(arr, size, max);
++        }
++
++    }
++}
+Index: struct/src/cn/scl/tree/TestBinaryTree.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- struct/src/cn/scl/tree/TestBinaryTree.java	(revision )
++++ struct/src/cn/scl/tree/TestBinaryTree.java	(revision )
+@@ -0,0 +1,19 @@
++package cn.scl.tree;
++
++public class TestBinaryTree {
++    public static void main(String[] args) {
++        BinaryTree binaryTree = new BinaryTree();
++        TreeNode root=new TreeNode(1);
++        binaryTree.setRoot(root);
++        TreeNode rootL = new TreeNode(2);
++        TreeNode rootR = new TreeNode(3);
++        root.setLeft(rootL);
++        root.setRight(rootR);
++        rootL.setLeft(new TreeNode(4));
++        rootL.setRight(new TreeNode(5));
++        rootR.setLeft(new TreeNode(6));
++        rootR.setRight(new TreeNode(7));
++//        binaryTree.frontShow();
++        System.out.println(binaryTree.midSerch(6));
++    }
++}
